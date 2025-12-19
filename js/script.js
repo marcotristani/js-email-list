@@ -1,22 +1,39 @@
 //Richiamo riferimenti documento output
-const listOutput = document.getElementById('list-output');
-const buttonRefresh = document.querySelector('button');
+const listOutput = document.getElementById("list-output");
+const buttonRefresh = document.getElementById("btn");
 
-//Dichiaro endpoint con indirizzio API
-const endpoint = 'https://flynn.boolean.careers/exercises/api/random/mail';
-//Eseguo chiamata API 
+//Chiamo la funzione per stampare 10 mail
+emailRandom();
+
+//aggiungo evento quando viene cliccato bottone
+buttonRefresh.addEventListener("click", emailRandom);
+
+//Definisco la funzione che mi stamperà n email in lista richiamando l'API
+function emailRandom() {
+
+  //Dichiaro endpoint con indirizzio API
+  const endpoint = "https://flynn.boolean.careers/exercises/api/random/mail";
+
+  listOutput.innerHTML = "";// Inizializzo l'output nel html come stringa vuota così quandio vado a premere il bottone per ricaricare non mi aggiungerà email alla lista già presente
+  for (let i = 0; i < 10; i++) {
+    //Eseguo chiamata API
     axios.get(endpoint)
-        .then(response => {
-            //codice da eseguire in caso di successo
-            const result = response.data;
+      .then((response) => {
+        //codice da eseguire in caso di successo
+        const result = response.data;
+        const email = result.response;
 
-            console.log(response, result);
-        })
-        .catch(error => {
-            // codice da eseguire in caso di errore
-            console.error(error.message)
-        })
-        .finally(() => {
-            // codice da eserguire a prescindere dall'esito
-            console.log("Fine della chiamata");
-        })
+        listOutput.innerHTML += `<li>${email}</li>`;
+      })
+      .catch((error) => {
+        // codice da eseguire in caso di errore
+        //console.error(error.message)
+        
+        listOutput.innerHTML = error.message;
+      })
+//       .finally(() => {
+//         // codice da eserguire a prescindere dall'esito
+//         // console.log("Fine della chiamata");
+//       });
+  }
+}
